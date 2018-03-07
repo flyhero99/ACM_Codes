@@ -1,3 +1,9 @@
+/**
+ * dp[i][j]为第i行第j列到底部的最大数字和
+ * 状态转移方程dp[i][j] = max(dp[i+1][j], dp[i+1][j+1]) + arr[i][j];
+ */
+
+
 // #include<bits/stdc++.h>
 #include<iostream>
 #include<algorithm>

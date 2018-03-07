@@ -1,3 +1,5 @@
+//mem[n]记录递归中间结果
+
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;

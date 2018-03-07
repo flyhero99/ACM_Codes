@@ -1,3 +1,6 @@
+//记忆化搜索写法：设立边界递归终止条件，其余情况用数组记录中间结果
+
+
 //#include<bits/stdc++.h>
 #include<iostream>
 #include<cstdio>
