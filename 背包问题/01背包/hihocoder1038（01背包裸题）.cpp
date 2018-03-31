@@ -8,12 +8,12 @@ using namespace std;
 #define pii pair<int,int>
 #define mem(a,b) memset(a,b,sizeof(a))
 
-const int maxn = 505;
-const int maxm = 100005;
+const int maxn = 505; // 最大物品种类数
+const int maxm = 100005; // 最大背包容量
 
-int n, m;
-int cost[maxn];
-int value[maxn];
+int n, m; // n-物品种类，m-背包容量
+int cost[maxn]; // 每种物品的体积（花费）
+int value[maxn]; // 每种物品的价值
 int dp[maxm];
 
 void ZeroOnePack() {

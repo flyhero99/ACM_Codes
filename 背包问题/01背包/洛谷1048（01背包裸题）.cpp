@@ -8,21 +8,29 @@ using namespace std;
 #define pii pair<int,int>
 #define mem(a,b) memset(a,b,sizeof(a))
 
-const int maxt = 1005;
-const int maxm = 105;
+const int maxn = 505; // 最大物品种类数
+const int maxm = 100005; // 最大背包容量
 
-int t, m;
-int c[maxm];
-int v[maxm];
-int dp[maxt];
+int n, m; // n-物品种类，m-背包容量
+int cost[maxn]; // 每种物品的体积（花费）
+int value[maxn]; // 每种物品的价值
+int dp[maxm];
+
+void ZeroOnePack() {
+    for(int i = 0; i < n; i++) { // 枚举每种物品
+        for(int j = m; j >= cost[i]; j--) { // 枚举容量至装不下当前物品
+            dp[j] = max(dp[j], dp[j-cost[i]] + value[i]);
+        }
+    }
+}
 
 int main() {
-    while(cin >> t >> m) {
-        for(int i = 0;i < m;i++) cin >> c[i] >> v[i];
-        for(int i = 0;i < m;i++) {
-            for(int j = t;j >= c[i];j--) dp[j] = max(dp[j], dp[j-c[i]]+v[i]);
-        }
-        cout << dp[t] << endl;
+    while(cin >> n >> m) {
+    	mem(dp, 0);
+        for(int i = 0; i < n; i++) cin >> cost[i] >> value[i];
+        ZeroOnePack();
+    	cout << dp[m] << endl;
     }
-    return 0;
+	return 0;
 }
+	
