@@ -12,8 +12,8 @@ const int maxn = 10005; // 最大物品种类数
 const int maxm = 100005; // 最大背包容量
 
 int n, m; // n-物品种类数量，m-背包最大容量
-int cost[maxn];
-int value[maxn];
+int cost[maxn]; // 物品花费（体积）
+int value[maxn]; // 物品价值
 int dp[maxm];
 
 void CompletePack() {
