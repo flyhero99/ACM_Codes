@@ -12,17 +12,23 @@ const int maxn = 505;
 const int maxm = 100005;
 
 int n, m;
-int need[maxn];
+int cost[maxn];
 int value[maxn];
 int dp[maxm];
 
+void ZeroOnePack() {
+    for(int i = 0; i < n; i++) { // 枚举每种物品
+        for(int j = m; j >= cost[i]; j--) { // 枚举容量至装不下当前物品
+            dp[j] = max(dp[j], dp[j-cost[i]] + value[i]);
+        }
+    }
+}
+
 int main() {
     while(cin >> n >> m) {
-    	memset(dp, 0, sizeof(dp));
-    	for(int i = 0;i < n;i++) cin >> need[i] >> value[i];
-    	for(int i = 0;i < n;i++) {
-    		for(int j = m;j >= need[i];j--) dp[j] = max(dp[j], dp[j-need[i]]+value[i]);
-    	}
+    	mem(dp, 0);
+        for(int i = 0; i < n; i++) cin >> cost[i] >> value[i];
+        ZeroOnePack();
     	cout << dp[m] << endl;
     }
 	return 0;
