@@ -53,14 +53,16 @@ void factor() {
 }
 
 int main() {
-	while(scanf("%lld", &n) != EOF) {
-		n = n*n;
+    scanf("%d", &t);
+	while(t--) {
+		// n = n*n;
+        scanf("%lld", &n);
 		factor();
 		ll sum = 1;
         for(int i = 1;i <= tot;i++) {
             sum *= (b[i]+1);
         }
-        cout << (sum+1)/2 << endl;
+        cout << sum << endl;
 	}
 	return 0;
 }
