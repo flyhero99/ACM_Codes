@@ -33,84 +33,74 @@ inline int read() {
     return x*f;
 }
 
+int t, n, q;
 ll sum[maxn<<2], add[maxn<<2];
-int n, m;
 
-struct node {
-	int l, r;
-	int mid() {return (l+r) >> 1;}
-}tr[maxn<<2];
+void pushup(int rt) {sum[rt] = sum[rt<<1] + sum[rt<<1|1];}
 
-void pushup(int rt) {sum[rt] = sum[rt<<1]+sum[rt<<1|1];}
-
-void pushdown(int rt, int m) {
-	if(add[rt]) {
-		add[rt<<1] += add[rt];
-		add[rt<<1|1] += add[rt];
-		sum[rt<<1] += add[rt]*(m - (m>>1));
-		sum[rt<<1|1] += add[rt] * (m>>1);
-		add[rt] = 0;
-	}
+// a[l,r]+=c则是+=，a[l,r]=c则是=。
+void pushdown(int rt, int len) {
+    if(add[rt]) {
+        add[rt<<1] += add[rt]; // +=
+        add[rt<<1|1] += add[rt]; // +=
+        sum[rt<<1] += add[rt]*(len - (len>>1)); // +=
+        sum[rt<<1|1] += add[rt]*(len>>1); // +=
+        add[rt] = 0;
+    }
 }
 
 void build(int l, int r, int rt) {
-	tr[rt].l = l, tr[rt].r = r; add[rt] = 0;
-	if(l == r) {scanf("%lld", &sum[rt]); return;}
-	int m = tr[rt].mid();
-	build(l, m, rt<<1);
-	build(m+1, r, rt<<1|1);
-	pushup(rt);
+    add[rt] = 0;
+    if(l == r) {
+        scanf("%lld", &sum[rt]);
+        // sum[rt] = 1;
+        return;
+    }
+    int m = (l+r) >> 1;
+    build(l, m, rt<<1);
+    build(m+1, r, rt<<1|1);
+    pushup(rt);
 }
 
-void update(int c, int l, int r, int rt) {
-	if(tr[rt].l == l && tr[rt].r == r) {
-		add[rt] += (ll) c;
-		sum[rt] += (ll) c * (r-l+1);
-		return;
-	}
-	if(tr[rt].l == tr[rt].r) return;
-	pushdown(rt, tr[rt].r-tr[rt].l+1);
-	int m = tr[rt].mid();
-	if(r <= m) update(c, l, r, rt<<1);
-	else if(l > m) update(c, l, r, rt<<1|1);
-	else {
-		update(c, l, m, rt<<1);
-		update(c, m+1, r, rt<<1|1);
-	}
-	pushup(rt);
+//a[L,R]区间每个数变为c，[l,r]为树上区间，rt为根结点
+void update(int L, int R, int c, int l, int r, int rt) {
+    if(L <= l && r <= R) {
+        add[rt] += c; // +=
+        sum[rt] += (ll)c*(r-l+1); // +=
+        return;
+    }
+    pushdown(rt, r-l+1);
+    int m = (l+r)>>1;
+    if(L <= m) update(L, R, c, l, m, rt<<1);
+    if(R > m) update(L, R, c, m+1, r, rt<<1|1);
+    pushup(rt);
 }
 
-ll query(int l, int r, int rt) {
-	if(l == tr[rt].l && r == tr[rt].r) return sum[rt];
-	pushdown(rt, tr[rt].r-tr[rt].l+1);
-	int m = tr[rt].mid();
-	ll res = 0;
-	if(r <= m) res += query(l, r, rt<<1);
-	else if(l > m) res += query(l, r, rt<<1|1);
-	else {
-		res += query(l, m, rt<<1);
-		res += query(m+1, r, rt<<1|1);
-	}
-	return res;
+ll query(int L, int R, int l, int r, int rt) {
+    if(L <= l && r <= R) return sum[rt];
+    pushdown(rt, r-l+1);
+    int m = (l+r)>>1;
+    ll ans = 0;
+    if(L <= m) ans += query(L, R, l, m, rt<<1);
+    if(R > m) ans += query(L, R, m+1, r, rt<<1|1);
+    return ans;
 }
 
 int main() {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-	while(scanf("%d %d", &n, &m) != EOF) {
-		build(1, n, 1);
-		while(m--) {
-			char ss[2]; int x, y, z;
-			scanf("%s", ss);
-			if(ss[0] == 'Q') {
-				scanf("%d %d", &x, &y);
-				printf("%lld\n", query(x, y, 1));
-				// cout << query(x, y, 1) << endl;
-			}
-			else if(ss[0] == 'C') {
-				scanf("%d %d %d", &x, &y, &z);
-				update(z, x, y, 1);
-			}
-		}
-	}
-	return 0;
+    char ss[2];
+    int x, y, z;
+    while(scanf("%d %d", &n, &q) != EOF) {
+        build(1, n, 1);
+        while(q--) {
+            scanf("%s", ss);
+            if(ss[0] == 'Q') {
+                scanf("%d %d", &x, &y);
+                printf("%lld\n", query(x, y, 1, n, 1));
+            }
+            else if(ss[0] == 'C') {
+                scanf("%d %d %d", &x, &y, &z);
+                update(x, y, z, 1, n, 1);
+            }
+        }
+    }
 }
