@@ -41,10 +41,10 @@ void pushup(int rt) {sum[rt] = sum[rt<<1] + sum[rt<<1|1];}
 // a[l,r]+=c则是+=，a[l,r]=c则是=。
 void pushdown(int rt, int len) {
     if(add[rt]) {
-        add[rt<<1] = add[rt]; // +=
-        add[rt<<1|1] = add[rt]; // +=
-        sum[rt<<1] = add[rt]*(len - (len>>1)); // +=
-        sum[rt<<1|1] = add[rt]*(len>>1); // +=
+        add[rt<<1] += add[rt]; // +=
+        add[rt<<1|1] += add[rt]; // +=
+        sum[rt<<1] += add[rt]*(len - (len>>1)); // +=
+        sum[rt<<1|1] += add[rt]*(len>>1); // +=
         add[rt] = 0;
     }
 }
@@ -52,8 +52,8 @@ void pushdown(int rt, int len) {
 void build(int l, int r, int rt) {
     add[rt] = 0;
     if(l == r) {
-        // scanf("%lld", &sum[rt]);
-        sum[rt] = 1;
+        scanf("%lld", &sum[rt]);
+        // sum[rt] = 1;
         return;
     }
     int m = (l+r) >> 1;
@@ -65,8 +65,8 @@ void build(int l, int r, int rt) {
 //a[L,R]区间每个数变为c，[l,r]为树上区间，rt为根结点
 void update(int L, int R, int c, int l, int r, int rt) {
     if(L <= l && r <= R) {
-        add[rt] = c; // +=
-        sum[rt] = (ll)c*(r-l+1); // +=
+        add[rt] += c; // +=
+        sum[rt] += (ll)c*(r-l+1); // +=
         return;
     }
     pushdown(rt, r-l+1);
@@ -87,15 +87,29 @@ ll query(int L, int R, int l, int r, int rt) {
 }
 
 int main() {
-	int x, y, z;
-	scanf("%d", &t);
-	for(int cas = 1; cas <= t; cas++) {
-		scanf("%d %d", &n, &q);
-		build(1, n, 1);
-		while(q--) {
-			scanf("%d %d %d", &x, &y, &z);
-			update(x, y, z, 1, n, 1);
-		}
-		printf("Case %d: The total value of the hook is %lld.\n", cas, query(1, n, 1, n, 1));
-	}
+    int t; scanf("%d", &t);
+    for(int cas = 1; cas <= t; cas++) {
+        scanf("%d", &n);
+        build(1, n, 1);
+        char ss[10];
+        int x, y;
+        printf("Case %d:\n", cas);
+        while(1) {
+            scanf("%s", ss);
+            if(ss[0] == 'E') break;
+            else if(ss[0] == 'Q') {
+                scanf("%d %d", &x, &y);
+                printf("%lld\n", query(x, y, 1, n, 1));
+            }
+            else if(ss[0] == 'A') {
+                scanf("%d %d", &x, &y);
+                update(x, x, y, 1, n, 1);
+            }
+            else if(ss[0] == 'S') {
+                scanf("%d %d", &x, &y);
+                update(x, x, -y, 1, n, 1);
+            }
+        }
+    }
+    return 0;
 }
