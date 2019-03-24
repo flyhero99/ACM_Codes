@@ -39,24 +39,6 @@ bool spfa(int st) {
     while(!q.empty()) {
         int u = q.front(); q.pop();
         vis[u] = false;
-        for(int i = 0; i < ver[u].size(); i++) {
-            int v = ver[u][i].v, c = ver[u][i].c;
-            if(dist[v] > dist[u]+c) {
-                dist[v] = dist[u]+c;
-                vis[v] = true;
-                q.push(v);
-            }
-        }
-    }
-}
-
-bool spfa(int st) {
-    mem(dist, inf); dist[st] = 0; vis[st] = true; cnt[st] = 1;
-    queue<int> q; q.push(st);
-
-    while(!q.empty()) {
-        int u = q.front(); q.pop();
-        vis[u] = false;
         for(int i = 0;i < ver[u].size();i++) {
             int v = ver[u][i].v; int c = ver[u][i].c;
             if(dist[v] > dist[u]+c) {
